@@ -23,5 +23,12 @@ class Quiz:
 
     @classmethod
     def from_dict(cls, data):
-        """저장된 dict에서 Quiz 객체를 다시 만든다."""
-        return cls(data["question"], data["choices"], data["answer"])
+        """저장된 dict에서 Quiz 객체를 다시 만든다. 형태가 틀리면 ValueError."""
+        question = data["question"]
+        choices = data["choices"]
+        answer = data["answer"]
+        if not isinstance(question, str) or not isinstance(choices, list) or len(choices) != 4:
+            raise ValueError("퀴즈 형식이 올바르지 않습니다.")
+        if not isinstance(answer, int) or not 1 <= answer <= 4:
+            raise ValueError("정답 번호가 올바르지 않습니다.")
+        return cls(question, choices, answer)
