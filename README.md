@@ -88,3 +88,6 @@ E1-2/
 
 ## Git 실습 기록
 - clone한 복제본(quiz-game-clone)에서 이 내용을 추가해 push하고, 원래 작업 폴더에서 pull로 받아왔습니다.
+
+![clone 기록](docs/screenshots/git_clone.png)
+![pull과 커밋 그래프](docs/screenshots/git_pull_log.png)
