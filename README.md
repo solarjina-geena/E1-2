@@ -92,9 +92,19 @@ E1-2/
 최고 점수는 **맞힌 문제 수가 더 많은 기록**으로 갱신됩니다.
 
 ## 실행 화면
+### 메뉴
 ![메뉴](docs/screenshots/menu.png)
+
+### 퀴즈 풀기 (문제 수 선택, 무작위 출제, 힌트 사용 시 0.5문제)
 ![플레이](docs/screenshots/play.png)
+
+### 퀴즈 추가 (힌트 입력 포함)
 ![퀴즈 추가](docs/screenshots/add_quiz.png)
+
+### 퀴즈 목록
+![퀴즈 목록](docs/screenshots/list.png)
+
+### 점수 확인 (최고 점수와 최근 기록)
 ![점수](docs/screenshots/score.png)
 
 ## Git 실습 기록
@@ -102,3 +112,10 @@ E1-2/
 
 ![clone 기록](docs/screenshots/git_clone.png)
 ![pull과 커밋 그래프](docs/screenshots/git_pull_log.png)
+
+### 커밋 그래프 (`git log --oneline --graph --all`)
+- 필수 기능은 `feature/play`, 보너스 5개는 각각 `feature/random`, `feature/question-count`,
+  `feature/delete`, `feature/history`, `feature/hint` 브랜치에서 작업한 뒤 `--no-ff`로 main에 병합했습니다.
+- 한국어 Windows 콘솔 글꼴에서는 그래프의 `\`가 `₩`로 보입니다.
+
+![커밋 그래프](docs/screenshots/git_log_graph.png)
