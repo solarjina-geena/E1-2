@@ -47,12 +47,36 @@ def show_menu():
     print("========================================")
 
 
+def play(quizzes):
+    """모든 퀴즈를 차례로 출제하고 맞힌 문제 수를 돌려준다."""
+    if not quizzes:
+        print("등록된 퀴즈가 없습니다. 먼저 퀴즈를 추가하세요.")
+        return None
+
+    print(f"\n퀴즈를 시작합니다! (총 {len(quizzes)}문제)")
+    correct = 0
+    for number, quiz in enumerate(quizzes, start=1):
+        quiz.display(number)
+        choice = get_number("정답 번호: ", 1, 4)
+        if quiz.is_correct(choice):
+            print("정답입니다! 🎉")
+            correct += 1
+        else:
+            print(f"아쉬워요. 정답은 {quiz.answer}번 '{quiz.choices[quiz.answer - 1]}'입니다.")
+
+    print("\n========================================")
+    print(f"결과: {len(quizzes)}문제 중 {correct}문제 정답!")
+    print("========================================")
+    return correct
+
+
 def main():
+    quizzes = make_default_quizzes()
     while True:
         show_menu()
         choice = get_number("선택: ", 1, 5)
         if choice == 1:
-            print("퀴즈 풀기는 준비 중입니다.")
+            play(quizzes)
         elif choice == 2:
             print("퀴즈 추가는 준비 중입니다.")
         elif choice == 3:
