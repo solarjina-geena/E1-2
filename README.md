@@ -91,6 +91,13 @@ E1-2/
 
 최고 점수는 **맞힌 문제 수가 더 많은 기록**으로 갱신됩니다.
 
+## 개발 환경
+- VSCode, Python 3.14.6, Git 2.56.0
+
+![VSCode](docs/screenshots/env_vscode.png)
+![Python·Git 버전](docs/screenshots/env_version.png)
+![Git 설정](docs/screenshots/env_git_config.png)
+
 ## 실행 화면
 ### 메뉴
 ![메뉴](docs/screenshots/menu.png)
