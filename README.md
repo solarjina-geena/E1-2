@@ -85,3 +85,6 @@ E1-2/
 ![플레이](docs/screenshots/play.png)
 ![퀴즈 추가](docs/screenshots/add_quiz.png)
 ![점수](docs/screenshots/score.png)
+
+## Git 실습 기록
+- clone한 복제본(quiz-game-clone)에서 이 내용을 추가해 push하고, 원래 작업 폴더에서 pull로 받아왔습니다.
