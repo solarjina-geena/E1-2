@@ -139,8 +139,9 @@ class QuizGame:
             print("등록된 퀴즈가 없습니다. 먼저 퀴즈를 추가하세요.")
             return
 
+        count = self.get_number(f"몇 문제를 풀까요? (1-{len(self.quizzes)}): ", 1, len(self.quizzes))
         # random.sample은 섞인 '복사본'을 만들므로 self.quizzes(목록 순서)는 그대로 남는다.
-        selected = random.sample(self.quizzes, len(self.quizzes))
+        selected = random.sample(self.quizzes, count)
         print(f"\n퀴즈를 시작합니다! (총 {len(selected)}문제, 무작위 순서)")
         correct = 0
         for number, quiz in enumerate(selected, start=1):
