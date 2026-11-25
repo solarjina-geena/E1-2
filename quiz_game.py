@@ -111,19 +111,22 @@ class QuizGame:
 
     def run(self):
         self.load()
-        while True:
-            self.show_menu()
-            choice = self.get_number("선택: ", 1, 5)
-            if choice == 1:
-                self.play()
-            elif choice == 2:
-                self.add_quiz()
-            elif choice == 3:
-                self.list_quizzes()
-            elif choice == 4:
-                self.show_score()
-            else:
-                break
+        try:
+            while True:
+                self.show_menu()
+                choice = self.get_number("선택: ", 1, 5)
+                if choice == 1:
+                    self.play()
+                elif choice == 2:
+                    self.add_quiz()
+                elif choice == 3:
+                    self.list_quizzes()
+                elif choice == 4:
+                    self.show_score()
+                else:
+                    break
+        except (KeyboardInterrupt, EOFError):  # Ctrl+C 또는 입력 끝(Ctrl+Z/Ctrl+D)
+            print("\n입력이 중단되어 저장 후 종료합니다.")
         self.save()
         print("게임을 종료합니다.")
 
