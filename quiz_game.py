@@ -1,6 +1,7 @@
 """게임 전체(퀴즈 목록, 점수, 메뉴)를 관리하는 QuizGame 클래스."""
 
 import json
+import random
 from pathlib import Path
 
 from quiz import Quiz
@@ -133,14 +134,16 @@ class QuizGame:
     # ---------- 기능 ----------
 
     def play(self):
-        """모든 퀴즈를 차례로 출제하고 결과에 따라 최고 점수를 갱신한다."""
+        """퀴즈를 무작위 순서로 출제하고 결과에 따라 최고 점수를 갱신한다."""
         if not self.quizzes:
             print("등록된 퀴즈가 없습니다. 먼저 퀴즈를 추가하세요.")
             return
 
-        print(f"\n퀴즈를 시작합니다! (총 {len(self.quizzes)}문제)")
+        # random.sample은 섞인 '복사본'을 만들므로 self.quizzes(목록 순서)는 그대로 남는다.
+        selected = random.sample(self.quizzes, len(self.quizzes))
+        print(f"\n퀴즈를 시작합니다! (총 {len(selected)}문제, 무작위 순서)")
         correct = 0
-        for number, quiz in enumerate(self.quizzes, start=1):
+        for number, quiz in enumerate(selected, start=1):
             quiz.display(number)
             choice = self.get_number("정답 번호: ", 1, 4)
             if quiz.is_correct(choice):
@@ -149,7 +152,7 @@ class QuizGame:
             else:
                 print(f"아쉬워요. 정답은 {quiz.answer}번 '{quiz.choices[quiz.answer - 1]}'입니다.")
 
-        total = len(self.quizzes)
+        total = len(selected)
         print("\n========================================")
         print(f"결과: {total}문제 중 {correct}문제 정답!")
         print("========================================")
