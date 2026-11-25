@@ -59,8 +59,18 @@
                 "알려지지 않았다"
             ],
             "answer": 2
+        },
+        {
+            "question": "태호와 건곤이가 지금 살고 있는곳은?",
+            "choices": [
+                "대전 오월드",
+                "백두대간수목원",
+                "에버랜드",
+                "제주도"
+            ],
+            "answer": 3
         }
     ],
-    "best_score": null,
-    "best_total": null
+    "best_score": 5,
+    "best_total": 6
 }
