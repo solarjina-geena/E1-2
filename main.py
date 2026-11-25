@@ -34,6 +34,26 @@ def get_number(prompt, low, high):
         return number
 
 
+def get_text(prompt):
+    """비어 있지 않은 문자열을 받을 때까지 다시 묻는다."""
+    while True:
+        text = input(prompt).strip()
+        if text == "":
+            print("입력이 비어 있습니다. 내용을 입력하세요.")
+            continue
+        return text
+
+
+def add_quiz(quizzes):
+    """문제, 선택지 4개, 정답 번호를 입력받아 퀴즈를 추가한다."""
+    print("\n새 퀴즈를 추가합니다.")
+    question = get_text("문제: ")
+    choices = [get_text(f"선택지 {i}: ") for i in range(1, 5)]
+    answer = get_number("정답 번호 (1-4): ", 1, 4)
+    quizzes.append(Quiz(question, choices, answer))
+    print(f"퀴즈가 추가되었습니다. (현재 {len(quizzes)}문제)")
+
+
 def show_menu():
     print()
     print("========================================")
@@ -78,7 +98,7 @@ def main():
         if choice == 1:
             play(quizzes)
         elif choice == 2:
-            print("퀴즈 추가는 준비 중입니다.")
+            add_quiz(quizzes)
         elif choice == 3:
             print("퀴즈 목록은 준비 중입니다.")
         elif choice == 4:
