@@ -2,6 +2,7 @@
 
 import json
 import random
+from datetime import datetime
 from pathlib import Path
 
 from quiz import Quiz
@@ -27,12 +28,14 @@ class QuizGame:
         self.quizzes = []       # Quiz 객체 리스트
         self.best_score = None  # 최고 기록의 맞힌 문제 수 (None = 아직 안 풀었음)
         self.best_total = None  # 최고 기록 때 푼 전체 문제 수
+        self.history = []       # 플레이 기록 리스트 ({date, total, score})
         self.reset_to_default()
 
     def reset_to_default(self):
         self.quizzes = make_default_quizzes()
         self.best_score = None
         self.best_total = None
+        self.history = []
 
     # ---------- 저장 / 불러오기 ----------
 
@@ -44,6 +47,10 @@ class QuizGame:
             self.quizzes = [Quiz.from_dict(q) for q in data["quizzes"]]
             self.best_score = data["best_score"]
             self.best_total = data["best_total"]
+            # history는 보너스로 나중에 생긴 키라, 예전 파일에 없으면 빈 기록으로 시작한다.
+            self.history = data.get("history", [])
+            if not isinstance(self.history, list):
+                raise ValueError("history 형식이 올바르지 않습니다.")
         except FileNotFoundError:                  # 첫 실행
             self.reset_to_default()
             self.save()
@@ -61,6 +68,7 @@ class QuizGame:
             "quizzes": [q.to_dict() for q in self.quizzes],
             "best_score": self.best_score,
             "best_total": self.best_total,
+            "history": self.history,
         }
         try:
             with open(STATE_FILE, "w", encoding="utf-8") as f:
@@ -160,7 +168,17 @@ class QuizGame:
         print("\n========================================")
         print(f"결과: {total}문제 중 {correct}문제 정답!")
         print("========================================")
+        self.add_history(correct, total)
         self.update_best_score(correct, total)
+
+    def add_history(self, correct, total):
+        """이번 플레이 결과를 날짜와 함께 기록하고 저장한다."""
+        self.history.append({
+            "date": datetime.now().strftime("%Y-%m-%d %H:%M"),
+            "total": total,
+            "score": correct,
+        })
+        self.save()
 
     def update_best_score(self, correct, total):
         """맞힌 문제 수가 더 많을 때만 최고 점수를 바꾼다."""
@@ -205,8 +223,13 @@ class QuizGame:
         print(f"'{removed.question}' 퀴즈를 삭제했습니다. (현재 {len(self.quizzes)}문제)")
 
     def show_score(self):
-        """최고 점수를 보여 준다. 한 번도 풀지 않았으면 안내만 한다."""
+        """최고 점수와 최근 기록 5개를 보여 준다. 한 번도 풀지 않았으면 안내만 한다."""
         if self.best_score is None:
             print("아직 푼 기록이 없습니다. 먼저 퀴즈를 풀어 보세요.")
             return
         print(f"\n🏆 최고 점수: {self.best_total}문제 중 {self.best_score}문제 정답")
+        if self.history:
+            print(f"\n최근 기록 (전체 {len(self.history)}회 중 최근 5회)")
+            print("----------------------------------------")
+            for record in reversed(self.history[-5:]):
+                print(f"{record['date']}  {record['total']}문제 중 {record['score']}문제 정답")
