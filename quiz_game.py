@@ -14,13 +14,26 @@ def make_default_quizzes():
     """처음 실행하거나 저장 파일이 손상되었을 때 쓰는 기본 퀴즈 6문제."""
     places = ["에버랜드", "서울대공원", "국립백두대간수목원", "대전 오월드"]
     return [
-        Quiz("무궁이와 태범이의 관계는?", ["부부", "남매", "모자", "사촌"], 2),
-        Quiz("무궁이와 태범이의 부모 이름은?", ["태호와 건곤", "한과 도", "한청과 우리", "아름과 다운"], 1),
-        Quiz("무궁이와 태범이가 지금 사는 곳은?", list(places), 3),
-        Quiz("무궁이와 태범이가 태어난 곳은?", list(places), 1),
-        Quiz("2026년 현재 무궁이와 태범이의 동생은 몇 마리인가?", ["2마리", "3마리", "4마리", "5마리"], 3),
-        Quiz("무궁이와 태범이 중 누가 첫째인가?", ["무궁", "태범", "동시에 태어났다", "알려지지 않았다"], 2),
+        Quiz("무궁이와 태범이의 관계는?", ["부부", "남매", "모자", "사촌"], 2,
+             "같은 부모에게서 같은 날 태어났어요"),
+        Quiz("무궁이와 태범이의 부모 이름은?", ["태호와 건곤", "한과 도", "한청과 우리", "아름과 다운"], 1,
+             "엄마 이름은 '하늘과 땅'을 뜻하는 한자어예요"),
+        Quiz("무궁이와 태범이가 지금 사는 곳은?", list(places), 3,
+             "경상북도 봉화에 있고, '호랑이숲'이 있어요"),
+        Quiz("무궁이와 태범이가 태어난 곳은?", list(places), 1,
+             "경기도 용인에 있는 놀이공원이에요"),
+        Quiz("2026년 현재 무궁이와 태범이의 동생은 몇 마리인가?", ["2마리", "3마리", "4마리", "5마리"], 3,
+             "동생은 다섯 마리였지만 그중 한 마리가 세상을 떠났어요"),
+        Quiz("무궁이와 태범이 중 누가 첫째인가?", ["무궁", "태범", "동시에 태어났다", "알려지지 않았다"], 2,
+             "남매 중 수컷이 먼저 태어났어요"),
     ]
+
+
+def format_score(score):
+    """5.0은 '5'로, 5.5는 '5.5'로 보이게 한다."""
+    if score == int(score):
+        return str(int(score))
+    return str(score)
 
 
 class QuizGame:
@@ -157,16 +170,30 @@ class QuizGame:
         correct = 0
         for number, quiz in enumerate(selected, start=1):
             quiz.display(number)
-            choice = self.get_number("정답 번호: ", 1, 4)
+            used_hint = False
+            if quiz.has_hint():
+                choice = self.get_number("정답 번호 (0: 힌트 보기): ", 0, 4)
+                if choice == 0:
+                    used_hint = True
+                    print(f"💡 힌트: {quiz.hint}")
+                    choice = self.get_number("정답 번호: ", 1, 4)  # 힌트는 한 번만
+            else:
+                choice = self.get_number("정답 번호: ", 1, 4)
             if quiz.is_correct(choice):
-                print("정답입니다! 🎉")
-                correct += 1
+                if used_hint:
+                    print("정답입니다! (힌트 사용: 0.5문제로 계산) 🎉")
+                    correct += 0.5
+                else:
+                    print("정답입니다! 🎉")
+                    correct += 1
             else:
                 print(f"아쉬워요. 정답은 {quiz.answer}번 '{quiz.choices[quiz.answer - 1]}'입니다.")
 
+        if correct == int(correct):  # 0.5 두 번 = 1.0 처럼 딱 떨어지면 정수로 저장
+            correct = int(correct)
         total = len(selected)
         print("\n========================================")
-        print(f"결과: {total}문제 중 {correct}문제 정답!")
+        print(f"결과: {total}문제 중 {format_score(correct)}문제 정답!")
         print("========================================")
         self.add_history(correct, total)
         self.update_best_score(correct, total)
@@ -194,7 +221,8 @@ class QuizGame:
         question = self.get_text("문제: ")
         choices = [self.get_text(f"선택지 {i}: ") for i in range(1, 5)]
         answer = self.get_number("정답 번호 (1-4): ", 1, 4)
-        self.quizzes.append(Quiz(question, choices, answer))
+        hint = input("힌트 (없으면 Enter): ").strip()
+        self.quizzes.append(Quiz(question, choices, answer, hint))
         self.save()
         print(f"퀴즈가 추가되었습니다. (현재 {len(self.quizzes)}문제)")
 
@@ -227,9 +255,9 @@ class QuizGame:
         if self.best_score is None:
             print("아직 푼 기록이 없습니다. 먼저 퀴즈를 풀어 보세요.")
             return
-        print(f"\n🏆 최고 점수: {self.best_total}문제 중 {self.best_score}문제 정답")
+        print(f"\n🏆 최고 점수: {self.best_total}문제 중 {format_score(self.best_score)}문제 정답")
         if self.history:
             print(f"\n최근 기록 (전체 {len(self.history)}회 중 최근 5회)")
             print("----------------------------------------")
             for record in reversed(self.history[-5:]):
-                print(f"{record['date']}  {record['total']}문제 중 {record['score']}문제 정답")
+                print(f"{record['date']}  {record['total']}문제 중 {format_score(record['score'])}문제 정답")
