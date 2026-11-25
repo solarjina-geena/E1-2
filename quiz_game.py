@@ -106,8 +106,9 @@ class QuizGame:
         print("1. 퀴즈 풀기")
         print("2. 퀴즈 추가")
         print("3. 퀴즈 목록")
-        print("4. 점수 확인")
-        print("5. 종료")
+        print("4. 퀴즈 삭제")
+        print("5. 점수 확인")
+        print("6. 종료")
         print("========================================")
 
     def run(self):
@@ -115,7 +116,7 @@ class QuizGame:
         try:
             while True:
                 self.show_menu()
-                choice = self.get_number("선택: ", 1, 5)
+                choice = self.get_number("선택: ", 1, 6)
                 if choice == 1:
                     self.play()
                 elif choice == 2:
@@ -123,6 +124,8 @@ class QuizGame:
                 elif choice == 3:
                     self.list_quizzes()
                 elif choice == 4:
+                    self.delete_quiz()
+                elif choice == 5:
                     self.show_score()
                 else:
                     break
@@ -186,6 +189,20 @@ class QuizGame:
         print("----------------------------------------")
         for number, quiz in enumerate(self.quizzes, start=1):
             print(f"{number}. {quiz.question}")
+
+    def delete_quiz(self):
+        """목록을 보여 주고 고른 번호의 퀴즈를 삭제한다. 0을 고르면 취소."""
+        if not self.quizzes:
+            print("등록된 퀴즈가 없습니다. 먼저 퀴즈를 추가하세요.")
+            return
+        self.list_quizzes()
+        number = self.get_number(f"삭제할 번호 (1-{len(self.quizzes)}, 0: 취소): ", 0, len(self.quizzes))
+        if number == 0:
+            print("삭제를 취소했습니다.")
+            return
+        removed = self.quizzes.pop(number - 1)
+        self.save()
+        print(f"'{removed.question}' 퀴즈를 삭제했습니다. (현재 {len(self.quizzes)}문제)")
 
     def show_score(self):
         """최고 점수를 보여 준다. 한 번도 풀지 않았으면 안내만 한다."""
