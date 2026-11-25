@@ -257,7 +257,8 @@ class QuizGame:
             return
         print(f"\n🏆 최고 점수: {self.best_total}문제 중 {format_score(self.best_score)}문제 정답")
         if self.history:
-            print(f"\n최근 기록 (전체 {len(self.history)}회 중 최근 5회)")
+            recent = self.history[-5:]  # 기록이 5개보다 적으면 있는 만큼만
+            print(f"\n최근 기록 (전체 {len(self.history)}회 중 최근 {len(recent)}회)")
             print("----------------------------------------")
-            for record in reversed(self.history[-5:]):
+            for record in reversed(recent):
                 print(f"{record['date']}  {record['total']}문제 중 {format_score(record['score'])}문제 정답")
